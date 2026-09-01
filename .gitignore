@@ -1,0 +1,22 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Public PHANGS products are downloaded separately.
+real_data/
+
+# Analysis products are reproducible and can be regenerated.
+outputs/
+
+# Large astronomy products should never enter Git.
+*.fits
+*.fits.gz
+*.fz
+
+# Local logs / scratch.
+*.log
+*.bak
