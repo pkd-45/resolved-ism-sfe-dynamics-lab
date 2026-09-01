@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+from scipy.integrate import trapezoid
 
 KPC_IN_KM = 3.0856775814913673e16
 SECONDS_PER_MYR = 365.25 * 24 * 3600 * 1e6
@@ -23,12 +24,7 @@ def orbital_time_myr(radius_kpc, vrot_kms):
     if radius.shape != velocity.shape:
         raise ValueError("radius and velocity must have the same shape")
     out = np.full(radius.shape, np.nan)
-    good = (
-        np.isfinite(radius)
-        & np.isfinite(velocity)
-        & (radius > 0)
-        & (velocity > 0)
-    )
+    good = np.isfinite(radius) & np.isfinite(velocity) & (radius > 0) & (velocity > 0)
     seconds = 2 * np.pi * radius[good] * KPC_IN_KM / velocity[good]
     out[good] = seconds / SECONDS_PER_MYR
     return out
@@ -59,6 +55,6 @@ def specific_angular_momentum(radius, surface_density, velocity):
     vel = vel[order]
     if r.size < 2 or np.any(np.diff(r) <= 0):
         raise ValueError("need at least two unique valid radii")
-    numerator = np.trapezoid(sigma * vel * r**2, r)
-    denominator = np.trapezoid(sigma * r, r)
+    numerator = trapezoid(sigma * vel * r**2, r)
+    denominator = trapezoid(sigma * r, r)
     return float(numerator / denominator) if denominator > 0 else float("nan")
